@@ -1,4 +1,4 @@
-# .Net5.0Mvc-Microsoft-Identity-Turkce-Proje-Baslangic-Seti
+
 Projelerinize hızlı başlangıç yapabilirsiniz. Email doğrulamaları, harici girişler, rol sistemi, yetkilendirme, engelleme gibi özellikler mevcut.
 
 Connection string değişimi sonrasında code first ile rahatlıkla kurulum yapabilirsiniz.
