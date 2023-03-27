@@ -1,0 +1,92 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Kayıt Ol</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h4>Yeni bir hesap oluştur.</h4>
+            <hr />
+            <div class="form-group">
+                Ad
+                <input asp-for="Input.Name" class="form-control" required maxlength="30" minlength="2" pattern="[a-zA-ZiüöşğıoçİÜÖŞĞIOÇ ]*" oninput="this.reportValidity()" />
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                Soyad
+                <input asp-for="Input.Surname" class="form-control" required maxlength="30" minlength="2" pattern="[a-zA-ZiüöşğıoçİÜÖŞĞIOÇ ]*" oninput="this.reportValidity()" />
+                <span asp-validation-for="Input.Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                Email Adresi
+                <input type="email" asp-for="Input.Email" class="form-control" required onkeypress="return spaceBloker()" maxlength="64" minlength="6" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                Telefon Numarası
+                <input type="tel" asp-for="Input.PhoneNumber" class="form-control" placeholder="05xxxxxxxxx" required onkeypress="return spaceBloker()" pattern="[0-9]{11}" />
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                Parola
+                <input asp-for="Input.Password" class="form-control" required onkeypress="return spaceBloker()" maxlength="16" minlength="5" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                Parola Tekrar
+                <input asp-for="Input.ConfirmPassword" class="form-control" required onkeypress="return spaceBloker()" maxlength="16" minlength="5" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">KAYIT OL</button>
+            <div class="form-group">
+                <p>
+                    <a asp-page="./Login">Zaten bir hesabınız mevcut mu?</a>
+                </p>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h4>Kaydolmak için başka bir hizmet kullanın.</h4>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            Henüz Yapılandırılmış harici kimlik doğrulama hizmeti yok.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins)
+                                {
+                                    @if (provider.Name == "Facebook")
+                                    {
+                                        <button type="submit" class="btn btn-outline-primary" name="provider" value="@provider.Name" title="@provider.DisplayName ile giriş yap">@provider.DisplayName</button>
+                                    }
+                                    else if (provider.Name == "Google")
+                                    {
+                                        <button type="submit" class="btn btn-outline-danger" name="provider" value="@provider.Name" title="@provider.DisplayName ile giriş yap">@provider.DisplayName</button>
+                                    }
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
