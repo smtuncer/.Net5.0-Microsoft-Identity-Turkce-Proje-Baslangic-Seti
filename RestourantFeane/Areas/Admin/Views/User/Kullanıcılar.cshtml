@@ -1,0 +1,169 @@
+﻿@model IPagedList<ApplicationUser>
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info"><i class="fas fa-users"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Kullanıcılar</span>
+                        <span class="info-box-number">@Model.TotalItemCount</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    <div class="content-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Kullanıcı Listesi</h3>
+                        <div class="card-tools">
+                            <form asp-action="Ara" class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="q" class="form-control float-right" placeholder="Kullanıcı ara" required>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped projects">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Ad Soyad
+                                    </th>
+                                    <th>
+                                        Email
+                                    </th>
+                                    <th>
+                                        Telefon
+                                    </th>
+                                    <th>
+                                        Yetki
+                                    </th>
+                                    <th>
+                                        İşlem
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.Name @item.Surname
+                                        </td>
+                                        <td>
+                                            @item.Email
+                                        </td>
+                                        <td>
+                                            @item.PhoneNumber
+                                        </td>
+                                        <td>
+                                            @item.Role
+                                        </td>
+                                        <td>
+                                            <div class="modal fade" id="modal-warning-@item.Id">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content bg-warning">
+                                                        <div class="modal-header">
+                                                            <h3 class="modal-title">
+                                                                Kullanıcı Yetkisini Değiştir
+                                                            </h3>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>@item.Name @item.Surname (@item.Role)</p>
+                                                            <p>@item.Email</p>
+                                                            <p>@item.PhoneNumber</p>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <a asp-action="UserServiceRole" asp-route-id="@item.Id" class="btn btn-dark">Kullanıcı (Servis)</a>
+                                                            <a asp-action="UserRole" asp-route-id="@item.Id" class="btn btn-dark">Kullanıcı</a>
+                                                            <a asp-action="AdminRole" asp-route-id="@item.Id" class="btn btn-dark">Admin</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-warning-@item.Id">
+                                                Yetki Değiştir
+                                            </button>
+                                            @if (item.LockoutEnd == null)
+                                            {
+                                                <div class="modal fade" id="modal-danger-@item.Id">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content bg-danger">
+                                                            <div class="modal-header">
+                                                                <h3 class="modal-title">
+                                                                    Kullanıcıyı Engelle
+                                                                </h3>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>@item.Name @item.Surname (@item.Role)</p>
+                                                                <p>@item.Email</p>
+                                                                <p>@item.PhoneNumber</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a asp-action="BlockUser" asp-route-id="@item.Id" class="btn btn-dark">Engelle</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-danger-@item.Id">
+                                                    Engelle
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <div class="modal fade" id="modal-dangerr-@item.Id">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content bg-danger">
+                                                            <div class="modal-header">
+                                                                <h3 class="modal-title">
+                                                                    Kullanıcının Engelini Kaldır
+                                                                </h3>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>@item.Name @item.Surname (@item.Role)</p>
+                                                                <p>@item.Email</p>
+                                                                <p>@item.PhoneNumber</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a asp-action="UnBlockUser" asp-route-id="@item.Id" class="btn btn-dark">Engeli Kaldır</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-dangerr-@item.Id">
+                                                    Engeli Kaldır
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer clearfix">
+                        @Model.TotalItemCount sonuçtan  @Model.FirstItemOnPage - @Model.LastItemOnPage arası gösteriliyor
+                        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Kullanıcılar", new { page = page }), new PagedListRenderOptions {
+                        LiElementClasses = new string[] { "page-item" },
+                        PageClasses = new string[] { "page-link" },
+                        UlElementClasses=new string[] { "pagination pagination-sm m-0 float-right" },
+                        ContainerDivClasses=new string[] { "pagination pagination-sm m-0 float-right" },
+                        LinkToFirstPageFormat = "<<",
+                        LinkToPreviousPageFormat = "<",
+                        LinkToNextPageFormat = ">",
+                        LinkToLastPageFormat = ">>" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
